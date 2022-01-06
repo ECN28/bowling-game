@@ -29,5 +29,4 @@ class PlayerService @Autowired constructor(
     fun deletePlayer(playerId: UUID){
         playerRepository.deleteById(playerId)
     }
-
 }

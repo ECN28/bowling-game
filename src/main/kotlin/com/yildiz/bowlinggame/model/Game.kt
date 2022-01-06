@@ -1,5 +1,6 @@
 package com.yildiz.bowlinggame.model
 
+import com.yildiz.bowlinggame.dto.GameDTO
 import java.util.*
 import javax.persistence.*
 
@@ -25,3 +26,9 @@ class Game constructor(
         this.score = score
     }
 }
+
+fun Game.toGameDTO() = GameDTO(
+    player = player!!,
+    frames = frames,
+    score = score!!
+)
