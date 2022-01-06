@@ -1,5 +1,6 @@
 package com.yildiz.bowlinggame.model
 
+import com.yildiz.bowlinggame.dto.FrameDTO
 import java.util.*
 import javax.persistence.*
 
@@ -10,7 +11,9 @@ class Frame constructor(
     firstRoll: Int,
     secondRoll: Int?,
     spare: Boolean?,
-    strike: Boolean?
+    strike: Boolean?,
+    subtotal: Int?,
+    round: Int?
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,6 +27,8 @@ class Frame constructor(
     var secondRoll: Int? = null
     var spare: Boolean? = null
     var strike: Boolean? = null
+    var subtotal: Int? = null
+    var round: Int? = null
 
     init {
         this.game = game
@@ -31,5 +36,16 @@ class Frame constructor(
         this.secondRoll = secondRoll
         this.spare = spare
         this.strike = strike
+        this.subtotal = subtotal
+        this.round = round
     }
 }
+fun Frame.toFrameDTO() = FrameDTO(
+    game = game,
+    firstRoll = firstRoll!!,
+    secondRoll = secondRoll,
+    spare = spare,
+    strike = strike,
+    subtotal = subtotal,
+    round = round
+)
