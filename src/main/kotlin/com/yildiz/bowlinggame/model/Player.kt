@@ -1,5 +1,6 @@
 package com.yildiz.bowlinggame.model
 
+import com.yildiz.bowlinggame.dto.PlayerDTO
 import java.util.*
 import javax.persistence.*
 
@@ -20,3 +21,8 @@ class Player constructor(
         this.surname = surname
     }
 }
+
+fun Player.toPlayerDTO() = PlayerDTO(
+    givenName = givenName!!,
+    surname = surname!!
+)
