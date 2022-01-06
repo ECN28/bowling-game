@@ -60,9 +60,50 @@ class GameRunner @Autowired constructor(
                     firstRoll = readLine()
                     val firstPoints: Int = Integer.valueOf(firstRoll)
                     validateFirstRollPoints(firstPoints)
-                    logger.info("First Roll points: $firstPoints")
+                    logger.info("First roll points: $firstPoints")
                     //initialize frame
                     frame = FrameDTO(createdGame, firstPoints, null, null, null, null, i)
+                    //check for strike or spare every round
+                    if(strike || spare){
+                        logger.info("bonus is activated this round")
+                        logger.info("strike $strike")
+                        logger.info("spare $spare")
+                        sum1 = frameService.calculateBonus(firstPoints)
+                        frame.subtotal = sum1
+                        spare = false
+                    }else{
+                        frame.subtotal = firstPoints
+                    }
+                    if(firstPoints == maxPins){
+                        strike = true
+                        frame.strike = strike
+                        val createdFrame = frameService.createFrame(createdGame, frame)
+                        frames.add(createdFrame)
+                        roundOngoing = false
+                    }
+                    if(firstPoints != maxPins){
+                        logger.info("Please enter your second roll score:")
+                        val secondRoll = readLine()
+                        val secondPoints: Int = Integer.valueOf(secondRoll)
+                        validateSecondRollPoints(firstPoints, secondPoints)
+                        logger.info("Second roll points: $secondPoints")
+                        if(strike){
+                            sum2 = frameService.calculateBonus(secondPoints)
+                            frame.subtotal = frame.subtotal!! + sum2
+                            strike = false
+                        }else{
+                            frame.subtotal = frame.subtotal!! + secondPoints
+                        }
+                        frame.secondRoll = secondPoints
+                        val rollTotal = firstPoints + secondPoints
+                        if(rollTotal == maxPins){
+                            spare = true
+                            frame.spare = spare
+                        }
+                        val createdFrame = frameService.createFrame(createdGame, frame)
+                        frames.add(createdFrame)
+                        roundOngoing = false
+                    }
                 }catch (ex: NumberFormatException){
                     logger.info("Please type a numeric value!")
                 }catch (ex: RollToHighException){
@@ -72,6 +113,8 @@ class GameRunner @Autowired constructor(
                 }
             }
         }
+        val score = frameService.calculateScore(frames, createdGame)
+        gameService.updateGame(createdGame.id!!,savedPlayer, frames, score)
     }
 
     fun validateFirstRollPoints(points: Int){

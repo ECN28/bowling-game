@@ -7,6 +7,7 @@ import com.yildiz.bowlinggame.exception.RollToHighException
 import com.yildiz.bowlinggame.model.Frame
 import com.yildiz.bowlinggame.model.Game
 import com.yildiz.bowlinggame.repository.FrameRepository
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
@@ -17,6 +18,7 @@ import javax.transaction.Transactional
 class FrameService @Autowired constructor(
     private val frameRepository: FrameRepository
 ) {
+    private val logger = LoggerFactory.getLogger(FrameService::class.java)
     val maxPins = 10
 
     fun createFrame(game: Game, frameDTO: FrameDTO): Frame {
@@ -38,5 +40,16 @@ class FrameService @Autowired constructor(
 
     fun calculateBonus(point: Int): Int{
         return (2* point)
+    }
+
+    fun calculateScore(frames: MutableList<Frame>, game: Game): Int{
+        var score = 0
+        for(frame in frames){
+            logger.info("Game results-----------------------------------------------")
+            logger.info("In round ${frame.round} frame subtotal = ${frame.subtotal} ")
+            score += frame.subtotal!!
+        }
+        logger.info("score: $score")
+        return score
     }
 }
