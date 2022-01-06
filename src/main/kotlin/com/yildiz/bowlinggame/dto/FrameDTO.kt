@@ -9,6 +9,8 @@ data class FrameDTO(
     var secondRoll: Int?,
     var spare: Boolean?,
     var strike: Boolean?,
+    var subtotal: Int?,
+    var round: Int?
 )
 
 fun FrameDTO.toFrame() = Frame(
@@ -17,4 +19,6 @@ fun FrameDTO.toFrame() = Frame(
     secondRoll = secondRoll,
     spare = spare,
     strike = strike,
+    subtotal = subtotal,
+    round = round
 )

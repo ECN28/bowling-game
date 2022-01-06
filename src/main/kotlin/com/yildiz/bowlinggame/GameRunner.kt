@@ -62,7 +62,7 @@ class GameRunner @Autowired constructor(
                     validateFirstRollPoints(firstPoints)
                     logger.info("First Roll points: $firstPoints")
                     //initialize frame
-                    frame = FrameDTO(createdGame, firstPoints, null, null, null)
+                    frame = FrameDTO(createdGame, firstPoints, null, null, null, null, i)
                 }catch (ex: NumberFormatException){
                     logger.info("Please type a numeric value!")
                 }catch (ex: RollToHighException){
