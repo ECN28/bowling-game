@@ -2,6 +2,8 @@ package com.yildiz.bowlinggame
 
 import com.yildiz.bowlinggame.dto.FrameDTO
 import com.yildiz.bowlinggame.dto.PlayerDTO
+import com.yildiz.bowlinggame.exception.RollNegativeInputException
+import com.yildiz.bowlinggame.exception.RollToHighException
 import com.yildiz.bowlinggame.model.Frame
 import com.yildiz.bowlinggame.service.FrameService
 import com.yildiz.bowlinggame.service.GameService
@@ -57,11 +59,33 @@ class GameRunner @Autowired constructor(
                 try{
                     firstRoll = readLine()
                     val firstPoints: Int = Integer.valueOf(firstRoll)
+                    validateFirstRollPoints(firstPoints)
                     logger.info("First Roll points: $firstPoints")
+                    //initialize frame
+                    frame = FrameDTO(createdGame, firstPoints, null, null, null)
                 }catch (ex: NumberFormatException){
                     logger.info("Please type a numeric value!")
+                }catch (ex: RollToHighException){
+                    logger.info(ex.message)
+                }catch (ex: RollNegativeInputException){
+                    logger.info(ex.message)
                 }
             }
+        }
+    }
+
+    fun validateFirstRollPoints(points: Int){
+        if(points > maxPins){
+            throw RollToHighException()
+        }else if(points < 0){
+            throw RollNegativeInputException()
+        }
+    }
+
+    fun validateSecondRollPoints(point: Int, secondPoint: Int){
+        val points = point + secondPoint
+        if(points > maxPins){
+            throw RollToHighException()
         }
     }
 

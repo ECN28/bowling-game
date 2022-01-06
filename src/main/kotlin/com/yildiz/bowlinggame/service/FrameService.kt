@@ -2,6 +2,8 @@ package com.yildiz.bowlinggame.service
 
 import com.yildiz.bowlinggame.dto.FrameDTO
 import com.yildiz.bowlinggame.dto.toFrame
+import com.yildiz.bowlinggame.exception.RollNegativeInputException
+import com.yildiz.bowlinggame.exception.RollToHighException
 import com.yildiz.bowlinggame.model.Frame
 import com.yildiz.bowlinggame.model.Game
 import com.yildiz.bowlinggame.repository.FrameRepository
@@ -15,6 +17,7 @@ import javax.transaction.Transactional
 class FrameService @Autowired constructor(
     private val frameRepository: FrameRepository
 ) {
+    val maxPins = 10
 
     fun createFrame(game: Game, frameDTO: FrameDTO): Frame {
         return frameRepository.save(frameDTO.toFrame())
@@ -31,5 +34,9 @@ class FrameService @Autowired constructor(
 
     fun deleteFrame(frameId: UUID){
         frameRepository.deleteById(frameId)
+    }
+
+    fun calculateBonus(point: Int): Int{
+        return (2* point)
     }
 }
